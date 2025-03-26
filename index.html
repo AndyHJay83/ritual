@@ -164,6 +164,42 @@
             
             if (currentIndex >= flow.length) return null;
             
+            // Special handling for 7H
+            if (currentCard === '7H') {
+                if (answers[0]) { // If YES to suit
+                    if (answers.length === 1) return 'Higher?';
+                    return null; // End after Higher question
+                } else { // If NO to suit
+                    if (answers.length === 1) return 'Same color?';
+                    if (answers.length === 2) return 'Higher?';
+                    return null;
+                }
+            }
+            
+            // Special handling for 7C
+            if (currentCard === '7C') {
+                if (answers[0]) { // If YES to suit
+                    if (answers.length === 1) return 'Higher?';
+                    return null; // End after Higher question
+                } else { // If NO to suit
+                    if (answers.length === 1) return 'Same color?';
+                    if (answers.length === 2) return 'Higher?';
+                    return null;
+                }
+            }
+            
+            // Special handling for 9D
+            if (currentCard === '9D') {
+                if (answers[0]) { // If YES to color
+                    if (answers.length === 1) return 'Same suit?';
+                    if (answers.length === 2) return 'Higher?';
+                    return null;
+                } else { // If NO to color
+                    if (answers.length === 1) return 'Higher?';
+                    return null;
+                }
+            }
+            
             const nextStep = flow[currentIndex];
             switch(nextStep) {
                 case 'suit':
