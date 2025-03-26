@@ -129,6 +129,7 @@
         let currentCard = null;
         let currentQuestion = null;
         let previousCard = null;
+        const cardOrder = ['5C', '7C', '7H', '9D', '7D', 'R'];
         let questionFlow = {
             '5C': ['suit', 'lower'],
             '7C': ['suit', 'higher', 'color', 'higher'],
@@ -138,6 +139,14 @@
             'R': ['suit', 'higher']
         };
         let answers = [];
+
+        function getPreviousCard(currentCard) {
+            const currentIndex = cardOrder.indexOf(currentCard);
+            if (currentIndex === 0) {
+                return cardOrder[cardOrder.length - 1];
+            }
+            return cardOrder[currentIndex - 1];
+        }
 
         function createButtons(buttonsText, action) {
             const buttonsContainer = document.getElementById('buttons-container');
@@ -350,8 +359,8 @@
         }
 
         function onButtonPress(buttonText) {
-            previousCard = currentCard;
             currentCard = buttonText;
+            previousCard = getPreviousCard(buttonText);
             answers = [];
             const firstQuestion = getNextQuestion();
             showQuestion(firstQuestion);
