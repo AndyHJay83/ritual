@@ -143,9 +143,7 @@
         function showQuestion(question) {
             document.getElementById('buttons-container').style.display = 'none';
             document.getElementById('question-container').style.display = 'flex';
-            if (question) {
-                document.getElementById('question-text').textContent = question;
-            }
+            document.getElementById('question-text').textContent = question;
             currentQuestion = question;
         }
 
@@ -163,6 +161,19 @@
         function getNextQuestion() {
             const flow = questionFlow[currentCard];
             const currentIndex = answers.length - 1;
+            
+            // For the first question (when answers is empty)
+            if (currentIndex === -1) {
+                const firstStep = flow[0];
+                switch(firstStep) {
+                    case 'suit':
+                        return 'Same suit?';
+                    case 'color':
+                        return 'Same color?';
+                    case 'higher':
+                        return 'Higher?';
+                }
+            }
             
             if (currentIndex >= flow.length) return null;
             
@@ -329,9 +340,6 @@
             currentCard = buttonText;
             answers = [];
             const firstQuestion = getNextQuestion();
-            if (firstQuestion) {
-                document.getElementById('question-text').textContent = firstQuestion;
-            }
             showQuestion(firstQuestion);
         }
 
