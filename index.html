@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-title" content="Binary">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192x192.png">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .button {
+            width: 50%;
+            height: 33.33vh;
+            display: inline-block;
+            border: 1px solid white;
+            box-sizing: border-box;
+            text-align: center;
+            line-height: 1.2;
+            font-size: 36px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .result {
+            text-align: center;
+            font-size: 24px;
+            line-height: 1.8;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #result-label {
+            margin: 20px;
+            padding: 20px;
+        }
+        #buttons-container {
+            height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        #reset-button {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 1px solid white;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        #question-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #question-text {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #yes-area {
+            height: 50%;
+            width: 100%;
+            border-bottom: 1px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        #no-area {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+    </style>
+    <script>
+        let currentCard = null;
+        let currentQuestion = null;
+        let questionFlow = {
+            '5C': ['suit', 'lower'],
+            '7C': ['suit', 'higher', 'color', 'higher'],
+            '7H': ['suit', 'higher', 'color', 'higher'],
+            '9D': ['color', 'suit', 'higher'],
+            '7D': ['suit', 'higher'],
+            'R': ['suit', 'higher']
+        };
+        let answers = [];
+
+        function createButtons(buttonsText, action) {
+            const buttonsContainer = document.getElementById('buttons-container');
+            buttonsContainer.innerHTML = '';
+
+            buttonsText.forEach(text => {
+                const button = document.createElement('div');
+                button.className = 'button';
+                button.innerHTML = text;
+                button.onclick = () => action(text);
+                buttonsContainer.appendChild(button);
+            });
+        }
+
+        function showQuestion(question) {
+            document.getElementById('buttons-container').style.display = 'none';
+            document.getElementById('question-container').style.display = 'flex';
+            document.getElementById('question-text').textContent = question;
+            currentQuestion = question;
+        }
+
+        function handleAnswer(isYes) {
+            answers.push(isYes);
+            const nextQuestion = getNextQuestion();
+            
+            if (nextQuestion) {
+                showQuestion(nextQuestion);
+            } else {
+                showResults();
+            }
+        }
+
+        function getNextQuestion() {
+            const flow = questionFlow[currentCard];
+            const currentIndex = answers.length - 1;
+            
+            if (currentIndex >= flow.length) return null;
+            
+            const nextStep = flow[currentIndex];
+            switch(nextStep) {
+                case 'suit':
+                    return 'Same suit?';
+                case 'color':
+                    return 'Same color?';
+                case 'higher':
+                    return 'Higher?';
+                default:
+                    return null;
+            }
+        }
+
+        function showResults() {
+            const resultLabel = document.getElementById('result-label');
+            resultLabel.innerHTML = getResults().replace(', ', '<br>');
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'flex';
+        }
+
+        function getResults() {
+            switch(currentCard) {
+                case '5C':
+                    if (answers[0]) { // YES to suit
+                        if (answers[1]) { // YES to lower
+                            return "AC, 2C";
+                        } else { // NO to lower
+                            return "10C";
+                        }
+                    } else { // NO to suit
+                        return "Empty";
+                    }
+                case '7C':
+                    if (answers[0]) { // YES to suit
+                        if (answers[1]) { // YES to higher
+                            return "9C, JC, KC";
+                        } else { // NO to higher
+                            return "4C";
+                        }
+                    } else { // NO to suit
+                        if (answers[1]) { // YES to color
+                            if (answers[2]) { // YES to higher
+                                return "10S";
+                            } else { // NO to higher
+                                return "AS, 2S";
+                            }
+                        } else { // NO to color
+                            if (answers[2]) { // YES to higher
+                                return "10H";
+                            } else { // NO to higher
+                                return "AH, 2H";
+                            }
+                        }
+                    }
+                case '7H':
+                    if (answers[0]) { // YES to suit
+                        if (answers[1]) { // YES to higher
+                            return "8C, QC";
+                        } else { // NO to higher
+                            return "3C";
+                        }
+                    } else { // NO to suit
+                        if (answers[1]) { // YES to color
+                            if (answers[2]) { // YES to higher
+                                return "9S, JS, KS";
+                            } else { // NO to higher
+                                return "4S, 5S";
+                            }
+                        } else { // NO to color
+                            if (answers[2]) { // YES to higher
+                                return "9H, JH, KH";
+                            } else { // NO to higher
+                                return "4H, 5H";
+                            }
+                        }
+                    }
+                case '9D':
+                    if (answers[0]) { // YES to color
+                        if (answers[1]) { // YES to suit
+                            if (answers[2]) { // YES to higher
+                                return "8H, QH";
+                            } else { // NO to higher
+                                return "3H";
+                            }
+                        } else { // NO to suit
+                            if (answers[2]) { // YES to higher
+                                return "10D";
+                            } else { // NO to higher
+                                return "AD, 2D";
+                            }
+                        }
+                    } else { // NO to color
+                        if (answers[1]) { // YES to higher
+                            return "8S, QS";
+                        } else { // NO to higher
+                            return "3S";
+                        }
+                    }
+                case '7D':
+                    if (answers[0]) { // YES to suit
+                        if (answers[1]) { // YES to higher
+                            return "JD, KD";
+                        } else { // NO to higher
+                            return "4D, 5D";
+                        }
+                    } else { // NO to suit
+                        return "Empty";
+                    }
+                case 'R':
+                    if (answers[0]) { // YES to suit
+                        if (answers[1]) { // YES to higher
+                            return "JD, KD";
+                        } else { // NO to higher
+                            return "4D, 5D";
+                        }
+                    } else { // NO to suit
+                        return "Empty";
+                    }
+                default:
+                    return "Invalid card";
+            }
+        }
+
+        function onButtonPress(buttonText) {
+            currentCard = buttonText;
+            answers = [];
+            const firstQuestion = getNextQuestion();
+            showQuestion(firstQuestion);
+        }
+
+        function reset() {
+            currentCard = null;
+            answers = [];
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('buttons-container').style.display = 'flex';
+            createButtons(["5C", "7C", "7H", "9D", "7D", "R"], onButtonPress);
+        }
+
+        // Initialize the interface
+        createButtons(["5C", "7C", "7H", "9D", "7D", "R"], onButtonPress);
+    </script>
+</head>
+<body>
+    <div id="buttons-container"></div>
+    <div id="question-container">
+        <div id="question-text"></div>
+        <div id="yes-area" onclick="handleAnswer(true)">YES</div>
+        <div id="no-area" onclick="handleAnswer(false)">NO</div>
+    </div>
+    <div id="results-container" class="result" style="display: none;">
+        <div id="result-label"></div>
+    </div>
+    <button id="reset-button" onclick="reset()"></button>
+</body>
+</html> 
