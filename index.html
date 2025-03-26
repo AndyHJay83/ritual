@@ -33,6 +33,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: transparent;
+            color: white;
+        }
+        .button:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         .result {
             text-align: center;
@@ -53,6 +58,8 @@
             height: 100vh;
             display: flex;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
         #reset-button {
             position: fixed;
@@ -63,7 +70,7 @@
             background: transparent;
             border: 1px solid white;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 2;
         }
         #question-container {
             display: none;
@@ -71,6 +78,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
         #question-text {
             font-size: 36px;
@@ -93,6 +102,16 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
+        }
+        #yes-area, #no-area {
+            cursor: pointer;
+        }
+        #yes-area:hover, #no-area:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #results-container {
+            position: relative;
+            z-index: 1;
         }
     </style>
     <script>
