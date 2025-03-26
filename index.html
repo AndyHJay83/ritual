@@ -143,7 +143,9 @@
         function showQuestion(question) {
             document.getElementById('buttons-container').style.display = 'none';
             document.getElementById('question-container').style.display = 'flex';
-            document.getElementById('question-text').textContent = question;
+            if (question) {
+                document.getElementById('question-text').textContent = question;
+            }
             currentQuestion = question;
         }
 
@@ -327,6 +329,9 @@
             currentCard = buttonText;
             answers = [];
             const firstQuestion = getNextQuestion();
+            if (firstQuestion) {
+                document.getElementById('question-text').textContent = firstQuestion;
+            }
             showQuestion(firstQuestion);
         }
 
