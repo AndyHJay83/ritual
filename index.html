@@ -359,11 +359,18 @@
         }
 
         // Initialize the interface
-        createButtons(["5C", "7C", "7H", "9D", "7D", "R"], onButtonPress);
+        // createButtons(["5C", "7C", "7H", "9D", "7D", "R"], onButtonPress);
     </script>
 </head>
 <body>
-    <div id="buttons-container"></div>
+    <div id="buttons-container">
+        <div class="button" onclick="onButtonPress('5C')">5C</div>
+        <div class="button" onclick="onButtonPress('7C')">7C</div>
+        <div class="button" onclick="onButtonPress('7H')">7H</div>
+        <div class="button" onclick="onButtonPress('9D')">9D</div>
+        <div class="button" onclick="onButtonPress('7D')">7D</div>
+        <div class="button" onclick="onButtonPress('R')">R</div>
+    </div>
     <div id="question-container">
         <div id="question-text"></div>
         <div id="yes-area" onclick="handleAnswer(true)">YES</div>
