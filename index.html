@@ -174,9 +174,9 @@
                 const firstStep = flow[0];
                 switch(firstStep) {
                     case 'suit':
-                        return 'Same suit?';
+                        return 'Suit?';
                     case 'color':
-                        return 'Same color?';
+                        return 'Color?';
                     case 'higher':
                         return 'Higher?';
                 }
@@ -190,7 +190,7 @@
                     if (answers.length === 1) return 'Higher?';
                     return null; // End after Higher question
                 } else { // If NO to suit
-                    if (answers.length === 1) return 'Same color?';
+                    if (answers.length === 1) return 'Color?';
                     if (answers.length === 2) return 'Higher?';
                     return null;
                 }
@@ -202,7 +202,7 @@
                     if (answers.length === 1) return 'Higher?';
                     return null; // End after Higher question
                 } else { // If NO to suit
-                    if (answers.length === 1) return 'Same color?';
+                    if (answers.length === 1) return 'Color?';
                     if (answers.length === 2) return 'Higher?';
                     return null;
                 }
@@ -211,7 +211,7 @@
             // Special handling for 9D
             if (currentCard === '9D') {
                 if (answers[0]) { // If YES to color
-                    if (answers.length === 1) return 'Same suit?';
+                    if (answers.length === 1) return 'Suit?';
                     if (answers.length === 2) return 'Higher?';
                     return null;
                 } else { // If NO to color
@@ -223,9 +223,9 @@
             const nextStep = flow[currentIndex];
             switch(nextStep) {
                 case 'suit':
-                    return 'Same suit?';
+                    return 'Suit?';
                 case 'color':
-                    return 'Same color?';
+                    return 'Color?';
                 case 'higher':
                     return 'Higher?';
                 default:
